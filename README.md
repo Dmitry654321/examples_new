@@ -43,7 +43,7 @@ Here are the steps to do to clone:
 5. On the server:
     1. Create a directory for your project `mkdir -p project`
     2. Unzip the archive `unzip -d project project.zip` (replace all files if you're asked)
-    3. Run ros2 docker container ```docker run -it --network=host -v /project:/workspace ros:humble```
+    3. Run ros2 docker container ```docker run -it --network=host -v ./project:/workspace ros:humble```
     4. In the container:
         1. Go to workspace directory: `cd /workspace`
         2. Only the first time,

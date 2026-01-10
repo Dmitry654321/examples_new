@@ -8,29 +8,27 @@ from sensor_msgs.msg import Range
 from duckietown_msgs.msg import WheelsCmdStamped
 
 
-class tof_node(Node):
+class TofNode(Node):
     def __init__(self):
         super().__init__('tof')
         self.vehicle_name = os.getenv('VEHICLE_NAME')
-        self.user = os.getenv("USER_NAME")
 
-        self.tof_sub = self.create_subscription(Range, f'/{self.vehicle_name}/range', self.checkRange, 10) #might be wrong topic name
+        self.tof_sub = self.create_subscription(Range, f'/{self.vehicle_name}/range', self.check_range, 10)
         self.wheels_pub = self.create_publisher(WheelsCmdStamped, f'/{self.vehicle_name}/wheels_cmd', 10)
-    
-    def checkRange(self, msg):
-        range = msg.range
-        if range >= 0.2:
-            self.moveForward()
+
+    def check_range(self, msg):
+        distance = msg.range
+        if distance >= 0.2:
+            self.move_forward()
         else:
             self.stop()
-    
-    def moveForward(self):
+
+    def move_forward(self):
         self.run_wheels('forward_callback', 0.5, 0.5)
-    
+
     def stop(self):
         self.run_wheels('stop_callback', 0.0, 0.0)
 
-        
     def run_wheels(self, frame_id, vel_left, vel_right):
         wheel_msg = WheelsCmdStamped()
         header = Header()
@@ -42,10 +40,9 @@ class tof_node(Node):
         self.wheels_pub.publish(wheel_msg)
 
 
-
 def main():
     rclpy.init()
-    tof = tof_node()
+    tof = TofNode()
     rclpy.spin(tof)
     rclpy.shutdown()
 

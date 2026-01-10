@@ -14,8 +14,8 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='root',
-    maintainer_email='root@todo.todo',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer='Gage Lankford, Ilia Nechaev',
+    maintainer_email='lankford@mit.edu, ilia.nechaev@jetbrains.com',
+    description='Move Duckiebot forward until it detects an object within 0.2 meters',
+    license='GPLv3',
 )

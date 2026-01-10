@@ -16,10 +16,10 @@ class ImageSaver(Node):
         self.create_subscription(CompressedImage, f'/{self.vehicle_name}/image/compressed', self.save_image, 10)
 
     def save_image(self, msg):
-        if self.counter % 30 == 0:
+        if self.counter % 30 != 0:
             self.counter += 1
             return
-        with open(self.output_dir + str(self.counter) + ',jpg', 'wb') as f:
+        with open(self.output_dir + str(self.counter) + '.jpg', 'wb') as f:
             f.write(msg.data)
         self.counter += 1
 

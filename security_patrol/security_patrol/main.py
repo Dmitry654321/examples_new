@@ -635,7 +635,7 @@ class SecurityPatrolNode(Node):
         # Defaults (override at runtime if your stack uses different topic names)
         image_topic = self.get_parameter("image_topic").value or f"/{vehicle}/camera_node/image/compressed"
         range_topic = self.get_parameter("range_topic").value or f"/{vehicle}/range"
-        wheels_topic = self.get_parameter("wheels_topic").value or f"/{vehicle}/wheels_driver_node/wheels_cmd"
+        wheels_topic = self.get_parameter("wheels_topic").value or f"/{vehicle}/wheels_cmd"
         led_topic = self.get_parameter("led_topic").value or f"/{vehicle}/led_pattern"
 
         # -------- Pub/Sub --------
@@ -692,7 +692,25 @@ class SecurityPatrolNode(Node):
     # -------- ROS callbacks --------
 
     def on_range(self, msg: Range):
-        self.range_m = float(msg.range)
+        r = float(msg.range)
+
+        # Treat 0.0 / NaN / out-of-range as "no valid reading"
+        if (not np.isfinite(r)) or (r <= 0.001):
+            self.range_m = None
+            return
+
+        # If driver provides min/max, enforce them
+        mn = float(getattr(msg, "min_range", 0.0) or 0.0)
+        mx = float(getattr(msg, "max_range", 0.0) or 0.0)
+
+        if mn > 0.0 and r < mn:
+            self.range_m = None
+            return
+        if mx > 0.0 and r > mx:
+            self.range_m = None
+            return
+
+        self.range_m = r
 
     def on_image(self, msg: CompressedImage):
         # This is also our "camera alive" heartbeat (even if we skip detection frames).

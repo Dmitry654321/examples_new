@@ -1,0 +1,24 @@
+security_patrol_node:
+  ros__parameters:
+    vehicle: duckie02
+
+    # your real robot topics (from ros2 topic list)
+    image_topic: /duckie02/image/compressed
+    range_topic: /duckie02/range
+    wheels_topic: /duckie02/wheels_cmd
+    led_topic: /duckie02/led_pattern
+
+    # safety
+    enable_motion: false
+    frame_timeout_s: 0.8
+
+    # smoothing
+    n_frames_trigger: 3
+    lost_target_s: 1.2
+
+    # emergency approach stop condition
+    close_area_frac: 0.16
+    close_h_frac: 0.60
+
+    # wait after reaching person
+    wait_s: 20.0

@@ -90,6 +90,13 @@ class ApproachController:
 
     def compute(self, img_w: int, bbox_cx: float) -> Tuple[float, float]:
         # error_norm in [-1, +1]
+        if rng_m is None:
+            # search instead of stopping
+            turn = self.p.search_turn if self.p.follow_left_wall else -self.p.search_turn
+            vl = clamp(self.p.base - turn, -self.p.max_cmd, self.p.max_cmd)
+            vr = clamp(self.p.base + turn, -self.p.max_cmd, self.p.max_cmd)
+            return vl, vr
+
         if img_w <= 1:
             return 0.0, 0.0
         error_norm = (bbox_cx - (img_w / 2.0)) / (img_w / 2.0)

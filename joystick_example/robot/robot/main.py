@@ -8,6 +8,10 @@ from duckietown_msgs.msg import LEDPattern, WheelsCmdStamped
 from rclpy.time import Duration
 
 from sensor_msgs.msg import Range
+from sensor_msgs.msg import CompressedImage
+
+
+
 class RobotController(Node):
 
     def __init__(self):
@@ -31,7 +35,17 @@ class RobotController(Node):
         self.wheels_sub = self.create_subscription(WheelsCmdStamped, f'/{self.vehicle_name}/wheels_cmd',self.change_velocity , 10)
         self.publisher = self.create_publisher(LEDPattern, f'/{self.vehicle_name}/led_pattern', 1)
 
+        self.create_subscription(CompressedImage, f'/{self.vehicle_name}/image/compressed', self.save_image, 10)
+
+
         self.get_logger().info("The duckiebot controller initialized and waiting for commands...")
+
+    def save_image(self, msg):
+
+        with open(self.output_dir + str(self.counter) + '.jpg', 'wb') as f:
+            self.get_logger().info(f'Saving image {self.counter}')
+            f.write(msg.data)
+
 
     def change_velocity(self,wheel_msg):
         self.left_velocity = wheel_msg.vel_left
@@ -45,9 +59,9 @@ class RobotController(Node):
                 self.move_forward()
         else:
             if self.timer % 2 == 1:
-                color = dict(r=1.0, g=0.0, b=0.0, a=0.5)
+                color = dict(r=1.0, g=0.0, b=0.0, a=1.0)
             else:
-                color = dict(r=1.0, g=0.0, b=0.0, a=0.0)
+                color = dict(r=0.0, g=0.0, b=1.0, a=0.0)
             self.timer += 1
 
             self.change_led(color)

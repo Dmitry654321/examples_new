@@ -51,7 +51,7 @@ class RobotController(Node):
         self.counter += 1
 
     def analyse_the_image(self,img):
-        self.get_logger().info(f'analysing the image {img[0][0]}')
+        self.get_logger().info('analysing the image ')
 
 
 

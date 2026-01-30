@@ -13,7 +13,8 @@ class RobotController(Node):
     def __init__(self):
         self.vehicle_name = os.getenv("VEHICLE_NAME")
         self.user = os.getenv("USER_NAME")
-
+        self.right_velocity = 0
+        self.left_velocity = 0
         super().__init__('controller')
 
 
@@ -26,15 +27,21 @@ class RobotController(Node):
         self.wheels_pub = self.create_publisher(WheelsCmdStamped, f'/{self.vehicle_name}/wheels_cmd', 10)
         self.led_pub = self.create_publisher(LEDPattern, f'{self.vehicle_name}/led_pattern', 10)
         self.tof_sub = self.create_subscription(Range, f'/{self.vehicle_name}/range', self.check_range, 10)
+        self.wheels_sub = self.create_subscription(WheelsCmdStamped, f'/{self.vehicle_name}/wheels_cmd',self.change_velocity , 10)
 
 
         self.get_logger().info("The duckiebot controller initialized and waiting for commands...")
+
+    def change_velocity(self,wheel_msg):
+        self.left_velocity = wheel_msg.vel_left
+        self.right_velocity = wheel_msg.vel_right
 
     def check_range(self, msg):
         distance = msg.range
         self.get_logger().info(f"Range:{distance}")
         if distance >= 0.2:
-            self.move_forward()
+            if self.left_velocity != 0 and self.right_velocity != 0:
+                self.move_forward()
         else:
             self.stop()
 

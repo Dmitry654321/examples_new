@@ -33,6 +33,13 @@ class RobotController(Node):
     def check_range(self, msg):
         distance = msg.range
         self.get_logger().info(f"Range:{distance}")
+        if distance >= 0.2:
+            self.command_callback(msg)
+        else:
+            self.stop()
+
+    def stop(self):
+        self.run_wheels('stop_callback', 0.0, 0.0)
 
     def change_led(self, color):
         msg = LEDPattern()

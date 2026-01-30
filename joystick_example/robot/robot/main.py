@@ -43,12 +43,15 @@ class RobotController(Node):
 
     def save_image(self, msg):
 
-        self.analyse_the_image(msg.data)
 
         with open(self.output_dir + str(self.counter) + '.jpg', 'wb') as f:
    #         self.get_logger().info(f'Saving image {self.counter}')
             f.write(msg.data)
         self.counter += 1
+
+        img = cv2.imread(self.output_dir + str(self.counter) + '.jpg')
+        self.analyse_the_image(img)
+
 
     def analyse_the_image(self,img):
 
@@ -60,7 +63,7 @@ class RobotController(Node):
         basic_colours = [[0, 254, 255], [0, 0, 0], [255, 255, 255], [255, 0, 0]]  # BGR format --- yellow, black, white
         # (255, 0, 0),(0, 255, 0),(0,0,255) --- blue, green, red
 
-        for i in range(0, 639, 1):
+        for i in range(0, 639):
             for j in range(0, 479):
                 px = img[j, i]
                 List = []

@@ -21,6 +21,7 @@ class RobotController(Node):
         self.left_velocity = 0
         super().__init__('controller')
         self.timer = 0
+        self.output_dir = "/workspace/images/"
 
 
         self.subscription = self.create_subscription(
@@ -53,7 +54,7 @@ class RobotController(Node):
 
     def check_range(self, msg):
         distance = msg.range
-        self.get_logger().info(f"Range:{distance}")
+       # self.get_logger().info(f"Range:{distance}")
         if distance >= 0.2:
             if self.left_velocity != 0 and self.right_velocity != 0:
                 self.move_forward()

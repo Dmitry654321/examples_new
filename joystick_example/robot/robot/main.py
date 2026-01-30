@@ -61,12 +61,20 @@ class RobotController(Node):
         command = msg.data.lower()
         if command == 'f':
             self.move_forward()
+            color = dict(r=0.0, g=1.0, b=0.0, a=0.5)
+            self.switch_lights(color)
         elif command == 'b':
             self.move_backward()
+            color = dict(r=0.0, g=1.0, b=0.0, a=0.5)
+            self.switch_lights(color)
         elif command == 'l':
             self.turn_left()
+            color = dict(r=0.0, g=1.0, b=0.0, a=0.5)
+            self.switch_lights(color)
         elif command == 'r':
             self.turn_right()
+            color = dict(r=0.0, g=1.0, b=0.0, a=0.5)
+            self.switch_lights(color)
         elif command == 's':
             self.stop_movement()
         elif command == 'gl':

@@ -22,7 +22,7 @@ class RobotController(Node):
         super().__init__('controller')
         self.timer = 0
         self.output_dir = "/workspace/images/"
-
+        self.counter = 0
 
         self.subscription = self.create_subscription(
             String,
@@ -46,7 +46,7 @@ class RobotController(Node):
         with open(self.output_dir + str(self.counter) + '.jpg', 'wb') as f:
             self.get_logger().info(f'Saving image {self.counter}')
             f.write(msg.data)
-
+        self.counter += 1
 
     def change_velocity(self,wheel_msg):
         self.left_velocity = wheel_msg.vel_left

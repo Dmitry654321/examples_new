@@ -7,7 +7,7 @@ from std_msgs.msg import String, ColorRGBA, Header
 from duckietown_msgs.msg import LEDPattern, WheelsCmdStamped
 from rclpy.time import Duration
 
-
+from sensor_msgs.msg import Range
 class RobotController(Node):
 
     def __init__(self):
@@ -25,8 +25,14 @@ class RobotController(Node):
         )
         self.wheels_pub = self.create_publisher(WheelsCmdStamped, f'/{self.vehicle_name}/wheels_cmd', 10)
         self.led_pub = self.create_publisher(LEDPattern, f'{self.vehicle_name}/led_pattern', 10)
+        self.tof_sub = self.create_subscription(Range, f'/{self.vehicle_name}/range', self.check_range, 10)
+
 
         self.get_logger().info("The duckiebot controller initialized and waiting for commands...")
+
+    def check_range(self, msg):
+        distance = msg.range
+        self.get_logger().info("Range:", distance)
 
     def change_led(self, color):
         msg = LEDPattern()

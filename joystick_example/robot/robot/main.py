@@ -16,6 +16,7 @@ class RobotController(Node):
         self.right_velocity = 0
         self.left_velocity = 0
         super().__init__('controller')
+        self.timer = self.create_timer(1, self.publish_pattern)
 
 
         self.subscription = self.create_subscription(
@@ -43,7 +44,11 @@ class RobotController(Node):
             if self.left_velocity != 0 and self.right_velocity != 0:
                 self.move_forward()
         else:
-            color = dict(r=1.0, g=0.0, b=0.0, a=0.5)
+            if self.timer % 2 == 1:
+                color = dict(r=1.0, g=0.0, b=0.0, a=0.5)
+            else:
+                color = dict(r=1.0, g=0.0, b=0.0, a=0.0)
+
             self.change_led(color)
             self.stop()
 

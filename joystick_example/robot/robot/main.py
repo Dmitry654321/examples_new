@@ -34,7 +34,7 @@ class RobotController(Node):
         distance = msg.range
         self.get_logger().info(f"Range:{distance}")
         if distance >= 0.2:
-            self.command_callback(msg)
+            self.move_forward()
         else:
             self.stop()
 

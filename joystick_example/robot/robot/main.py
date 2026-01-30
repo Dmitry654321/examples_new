@@ -9,7 +9,7 @@ from rclpy.time import Duration
 
 from sensor_msgs.msg import Range
 from sensor_msgs.msg import CompressedImage
-
+import cv2
 
 
 class RobotController(Node):
@@ -51,8 +51,30 @@ class RobotController(Node):
         self.counter += 1
 
     def analyse_the_image(self,img):
-        self.get_logger().info('analysing the image ')
 
+        self.high_contrast(img)
+
+    def high_contrast(self, img):  # make the surroundings contrasting, so road will be identified easier
+        # self.get_logger().info(f'We got to high contrast with the image {img}')
+        width, height = 640, 480
+        basic_colours = [[0, 254, 255], [0, 0, 0], [255, 255, 255], [255, 0, 0]]  # BGR format --- yellow, black, white
+        # (255, 0, 0),(0, 255, 0),(0,0,255) --- blue, green, red
+
+        for i in range(0, 639, 1):
+            for j in range(0, 479):
+                px = img[j, i]
+                List = []
+
+                for k in range(len(basic_colours)):
+                    value = (basic_colours[k][0] - int(px[0])) ** 2 + (basic_colours[k][1] - int(px[1])) ** 2 + (
+                                basic_colours[k][2] - int(px[2])) ** 2
+                    List.append(value)
+                Min = min(List)
+                Value = List.index(Min)
+                img[j, i] = basic_colours[Value]
+        self.get_logger().info('tried to save the image ')
+
+        cv2.imwrite(self.output_dir + str(self.counter) + '.jpg',img)
 
 
     def change_velocity(self,wheel_msg):

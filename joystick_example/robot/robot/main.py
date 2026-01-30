@@ -28,7 +28,7 @@ class RobotController(Node):
         self.led_pub = self.create_publisher(LEDPattern, f'{self.vehicle_name}/led_pattern', 10)
         self.tof_sub = self.create_subscription(Range, f'/{self.vehicle_name}/range', self.check_range, 10)
         self.wheels_sub = self.create_subscription(WheelsCmdStamped, f'/{self.vehicle_name}/wheels_cmd',self.change_velocity , 10)
-
+        self.publisher = self.create_publisher(LEDPattern, f'/{self.vehicle_name}/led_pattern', 1)
 
         self.get_logger().info("The duckiebot controller initialized and waiting for commands...")
 
@@ -43,6 +43,8 @@ class RobotController(Node):
             if self.left_velocity != 0 and self.right_velocity != 0:
                 self.move_forward()
         else:
+            color = dict(r=1.0, g=0.0, b=0.0, a=0.5)
+            self.change_led(color)
             self.stop()
 
     def stop(self):

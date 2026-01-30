@@ -32,7 +32,7 @@ class RobotController(Node):
 
     def check_range(self, msg):
         distance = msg.range
-        self.get_logger().info("Range:", distance)
+        self.get_logger().info(f"Range:{distance}")
 
     def change_led(self, color):
         msg = LEDPattern()

@@ -43,10 +43,17 @@ class RobotController(Node):
 
     def save_image(self, msg):
 
+        self.analyse_the_image(msg.data)
+
         with open(self.output_dir + str(self.counter) + '.jpg', 'wb') as f:
-            self.get_logger().info(f'Saving image {self.counter}')
+   #         self.get_logger().info(f'Saving image {self.counter}')
             f.write(msg.data)
         self.counter += 1
+
+    def analyse_the_image(self,img):
+        self.get_logger().info(f'analysing the image {self.img[0]}')
+
+
 
     def change_velocity(self,wheel_msg):
         self.left_velocity = wheel_msg.vel_left
